@@ -1,4 +1,5 @@
 #include <WiFi.h>
+#include "esp_task_wdt.h" // Библиотека для управления Watchdog
 
 const char* ssid = "Redmi Note 13 Pro";
 const char* password = "x7ks77du"; 
@@ -7,6 +8,9 @@ WiFiServer server(3333);
 WiFiClient client;
 
 void setup() {
+  // Отключаем Watchdog, чтобы ESP32 не перезагружалась во время подключения
+  esp_task_wdt_deinit(); 
+
   Serial.begin(115200, SERIAL_8N1, 16, 17);
   Serial1.begin(115200);
 
@@ -18,6 +22,7 @@ void setup() {
   WiFi.begin(ssid, password);
   
   int timeout = 0;
+  // Ждем до 20 секунд
   while (WiFi.status() != WL_CONNECTED && timeout < 40) { 
     delay(500);
     Serial1.print(".");
@@ -30,8 +35,11 @@ void setup() {
     Serial1.println(WiFi.localIP()); 
   } else {
     Serial1.println("Failed to connect (Timeout)");
+    Serial1.println("Check if phone hotspot is 2.4GHz");
   }
+  
   server.begin();
+  Serial1.println("Server started on port 3333");
 }
 
 void loop() {
