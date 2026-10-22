@@ -1,0 +1,29 @@
+name: Build ESP32 Firmware
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+        
+      - name: Install ESP32 Core
+        run: |
+          arduino-cli config init
+          arduino-cli config set board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+          
+      - name: Compile Sketch
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:esp32 sketch.ino --output-dir ./output
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: firmware
+          path: ./output/sketch.ino.bin
