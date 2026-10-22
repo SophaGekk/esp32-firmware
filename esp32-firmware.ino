@@ -11,7 +11,7 @@ void setup() {
   delay(1000); // Пауза, чтобы вы успели открыть PuTTY
 
   Serial.println("\n--- STARTING WIFI TEST ---");
-  Serial2.begin(9600, SERIAL_8N1, 16, 17); 
+  Serial2.begin(9600, SERIAL_8N1, 25, 26); 
   Serial.println("\n--- STARTING ---");
   
   WiFi.mode(WIFI_STA);
