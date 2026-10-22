@@ -11,6 +11,8 @@ void setup() {
   delay(1000); // Пауза, чтобы вы успели открыть PuTTY
 
   Serial.println("\n--- STARTING WIFI TEST ---");
+  Serial2.begin(9600, SERIAL_8N1, 16, 17); 
+  Serial.println("\n--- STARTING ---");
   
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
@@ -38,10 +40,13 @@ void loop() {
     client = server.available();
     return;
   }
-  
-  // Если планшет/компьютер подключится, ESP32 будет отправлять ему эхо
+
+  // Данные от STM32 -> планшету
+  while (Serial2.available()) {
+    client.write(Serial2.read());
+  }
+  // Данные от планшета -> STM32
   while (client.available()) {
-    char c = client.read();
-    client.print(c); // Отправляем обратно (эхо)
+    Serial2.write(client.read());
   }
 }
