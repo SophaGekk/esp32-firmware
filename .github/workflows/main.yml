@@ -23,8 +23,7 @@ jobs:
           
       - name: Compile Sketch
         run: |
-          # Указываем путь к папке со скетчем
-          arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir ./output ./esp32-comforte-zone
+          arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir ./output ./
           
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
